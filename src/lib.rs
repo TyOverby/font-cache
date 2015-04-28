@@ -78,6 +78,21 @@ impl <I> RenderedFont<I> {
         &mut self.image
     }
 
+    pub fn map_img<B, F>(self, mapping_fn: F) -> RenderedFont<B>
+    where F: FnOnce(I) -> B {
+        RenderedFont {
+            name: self.name,
+            font_size: self.font_size,
+
+            image: mapping_fn(self.image),
+            line_height: self.line_height,
+            max_width: self.max_width,
+            char_info: self.char_info,
+            kerning: self.kerning
+        }
+
+    }
+
     pub fn positions_for(&self, text: &str) -> Vec<OutputPosition> {
         let mut out = Vec::with_capacity(text.len());
 

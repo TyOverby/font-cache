@@ -3,18 +3,23 @@ use std::collections::HashMap;
 /// Placement information about a specific character.
 #[derive(Clone, Copy)]
 pub struct CharInfo {
+    /// The position in the image of the char
+    pub image_position: (u32, u32),
+    /// The (width, height) of the rendered character in the image
+    pub image_size: (u32, u32),
+
     /// The number of pixels (x, y) that are advanced after this character
     /// is drawn.
-    pub advance: (u32, u32),
+    pub advance: (i32, i32),
     /// The distance that the pen should move before printing the character.
-    pub pixel_offset: (u32, u32),
+    pub pixel_offset: (i32, i32),
 }
 
 /// A representation of a fully-rendered font that contains a atlas image
 /// and the metadata required to draw from it.
 pub struct RenderedFont<I> {
-    name: String,
-    font_size: u32,
+    family_name: Option<String>,
+    style_name: Option<String>,
 
     image: I,
     line_height: u32,
@@ -28,15 +33,16 @@ pub struct OutputPosition {
     /// The character being drawn
     pub c: char,
     /// The position of the character on the screen
-    pub pos: (i32, i32),
-    /// The size of the character
-    pub size: (u32, u32)
+    pub screen_pos: (i32, i32),
+
+    /// More information about the drawn character
+    pub char_info: CharInfo
 }
 
 impl <I> RenderedFont<I> {
     pub fn new(
-        name: String,
-        font_size: u32,
+        family_name: Option<String>,
+        style_name: Option<String>,
 
         image: I,
         line_height: u32,
@@ -45,8 +51,8 @@ impl <I> RenderedFont<I> {
         kerning: HashMap<(char, char), (i32, i32)>) -> RenderedFont<I> {
 
         RenderedFont {
-            name: name,
-            font_size: font_size,
+            family_name: family_name,
+            style_name: style_name,
 
             image: image,
             line_height: line_height,
@@ -82,14 +88,14 @@ impl <I> RenderedFont<I> {
         self.char_info.get(&c).cloned()
     }
 
-    /// Returns the name of this font.
-    pub fn name(&self) -> &str {
-        &self.name
+    /// Returns the name of this font family e.g. Times New Roman
+    pub fn family_name(&self) -> Option<&str> {
+        self.family_name.as_ref().map(|a| &a[..])
     }
 
-    /// Returns the size that this font was rendered at.
-    pub fn size(&self) -> u32 {
-        self.font_size
+    /// Returns the name of the style e.g. (Bold).
+    pub fn style_name(&self) -> Option<&str> {
+        self.style_name.as_ref().map(|a| &a[..])
     }
 
     /// Returns a reference to the contained image.
@@ -107,8 +113,8 @@ impl <I> RenderedFont<I> {
     pub fn map_img<B, F>(self, mapping_fn: F) -> RenderedFont<B>
     where F: FnOnce(I) -> B {
         RenderedFont {
-            name: self.name,
-            font_size: self.font_size,
+            family_name: self.family_name,
+            style_name: self.style_name,
 
             image: mapping_fn(self.image),
             line_height: self.line_height,
@@ -146,18 +152,17 @@ impl <I> RenderedFont<I> {
                 y += dy;
             }
 
-            if let Some(CharInfo{advance, pixel_offset}) = self.char_info(current) {
-                let (ox, oy) = pixel_offset;
+            if let Some(char_info) = self.char_info(current) {
+                let (ox, oy) = char_info.pixel_offset;
                 let pos = (x + ox as i32, y - oy as i32);
-                let size = advance;
 
                 out.push(OutputPosition {
                     c: current,
-                    pos: pos,
-                    size: size,
+                    screen_pos: pos,
+                    char_info: char_info
                 });
 
-                let (dx, dy) = advance;
+                let (dx, dy) = char_info.advance;
                 x += dx as i32;
                 y += dy as i32;
             }

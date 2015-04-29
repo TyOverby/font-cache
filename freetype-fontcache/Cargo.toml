@@ -1,0 +1,19 @@
+[package]
+name = "freetype-fontcache"
+version = "0.1.0"
+authors = ["Ty Overby <ty@pre-alpha.com>"]
+
+[lib]
+name = "freetype_fontcache"
+path = "./src/lib.rs"
+
+[dependencies.fontcache]
+path = "../"
+
+[dependencies.freetype-rs]
+git = "https://github.com/PistonDevelopers/freetype-rs"
+
+[dependencies.glyph_packer]
+git = "https://github.com/TyOverby/glyph_packer.git"
+
+[dependencies.image]

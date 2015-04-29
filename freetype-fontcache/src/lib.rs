@@ -12,6 +12,8 @@ struct BitmapOffset(i32, i32);
 pub type FreetypeError = freetype::error::Error;
 pub type FreetypeResult<T> = Result<T, FreetypeError>;
 
+/// Given a freetype face, this function generates a RenderedFont with the
+/// a `DynamicImage` backing it.
 pub fn render<I: Iterator<Item=char>>(face: &mut freetype::Face, chars: I, kerning: bool)
 -> FreetypeResult<fontcache::RenderedFont<image::DynamicImage>> {
     let chars_vec: Vec<_> = chars.collect();

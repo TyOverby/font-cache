@@ -1,7 +1,9 @@
+extern crate rustc_serialize;
+
 use std::collections::HashMap;
 
 /// Placement information about a specific character.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, RustcEncodable, RustcDecodable)]
 pub struct CharInfo {
     /// The position in the image of the char
     pub image_position: (u32, u32),
@@ -17,6 +19,7 @@ pub struct CharInfo {
 
 /// A representation of a fully-rendered font that contains a atlas image
 /// and the metadata required to draw from it.
+#[derive(Clone, RustcEncodable, RustcDecodable)]
 pub struct RenderedFont<I> {
     family_name: Option<String>,
     style_name: Option<String>,

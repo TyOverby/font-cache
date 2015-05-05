@@ -51,7 +51,7 @@ fn main() {
     }
 }
 
-fn render_face(library: &freetype::Library, file: String, sizes: Vec<u32>) -> freetype::FtResult<()> {
+fn render_face(library: &freetype::Library, file: String, sizes: Vec<u32>) -> EncodingError<()> {
     let mut face = try!(library.new_face(file.clone(), 0));
     for size in sizes {
         face.set_pixel_sizes(0, size);

@@ -113,18 +113,19 @@ impl <I> RenderedFont<I> {
 
     /// Applies a transformation function to the image of this rendered font
     /// producing a new rendered font with that image.
-    pub fn map_img<B, F>(self, mapping_fn: F) -> RenderedFont<B>
-    where F: FnOnce(I) -> B {
-        RenderedFont {
+    pub fn map_img<A, B, F>(self, mapping_fn: F) -> (RenderedFont<A>, B)
+    where F: FnOnce(I) -> (A, B) {
+        let (r, e) = mapping_fn(self.image);
+        (RenderedFont {
             family_name: self.family_name,
             style_name: self.style_name,
 
-            image: mapping_fn(self.image),
+            image: r,
             line_height: self.line_height,
             max_width: self.max_width,
             char_info: self.char_info,
             kerning: self.kerning
-        }
+        }, e)
 
     }
 

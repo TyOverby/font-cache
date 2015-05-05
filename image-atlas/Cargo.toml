@@ -1,5 +1,5 @@
 [package]
-name = "atlas"
+name = "image-atlas"
 version = "0.1.0"
 authors = ["Ty Overby <ty@pre-alpha.com>"]
 

@@ -1,10 +1,14 @@
 [package]
-name = "freetype-fontcache"
+name = "freetype-atlas"
 version = "0.1.0"
 authors = ["Ty Overby <ty@pre-alpha.com>"]
 
+[[bin]]
+name = "atlas_generator"
+path = "./src/atlas_generator.rs"
+
 [lib]
-name = "freetype_fontcache"
+name = "freetype_atlas"
 path = "./src/lib.rs"
 
 [dependencies.fontcache]
@@ -17,3 +21,5 @@ git = "https://github.com/PistonDevelopers/freetype-rs"
 git = "https://github.com/TyOverby/glyph_packer.git"
 
 [dependencies.image]
+[dependencies.image-atlas]
+path = "../image-atlas"

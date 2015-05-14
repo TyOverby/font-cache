@@ -14,12 +14,10 @@ path = "./src/lib.rs"
 [dependencies.fontcache]
 path = "../"
 
-[dependencies.freetype-rs]
-git = "https://github.com/PistonDevelopers/freetype-rs"
-
 [dependencies.glyph_packer]
 git = "https://github.com/TyOverby/glyph_packer.git"
 
 [dependencies.image]
+[dependencies.freetype-rs]
 [dependencies.image-atlas]
 path = "../image-atlas"
